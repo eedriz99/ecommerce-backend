@@ -29,20 +29,23 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         max_length=255, primary_key=True, unique=True, verbose_name='E-mail address')
     firstname = models.CharField(max_length=50, verbose_name='First name')
     lastname = models.CharField(max_length=50, verbose_name='Last name')
-    phone = models.CharField(max_length=15)
-    address = models.CharField(max_length=50)
-    city = models.CharField(max_length=20)
-    state = models.CharField(max_length=10)
+    phone = models.CharField(max_length=15, null=True, blank=True)
+    address = models.CharField(max_length=50, null=True, blank=True)
+    city = models.CharField(max_length=20, null=True, blank=True)
+    state = models.CharField(max_length=10, null=True, blank=True)
 
     zipcode = models.CharField(
         max_length=6,
         verbose_name="Zip Code/ Postal Address",
-        help_text="Enter your Zip Code or Postal Address")
-    country = models.CharField(max_length=10, default="USA")
-    picture = models.ImageField(upload_to="")
+        help_text="Enter your Zip Code or Postal Address",
+        null=True, blank=True)
+    country = models.CharField(
+        max_length=10, default="USA", null=True, blank=True)
+    picture = models.ImageField(upload_to="", null=True, blank=True)
 
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
+    is_merchant = models.BooleanField(default=False)
 
     objects = CustomUserManager()
 

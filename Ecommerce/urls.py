@@ -19,6 +19,7 @@ from django.urls import path
 
 from product import views as productViews
 from order import views as orderViews
+from userProfile import views as authViews
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,4 +31,7 @@ urlpatterns = [
     path('category/', productViews.category_view, name='category-view'),
     path('orders/', orderViews.orders_view, name='order-list-view'),
     path('order/<slug:slug>', orderViews.order_view, name='order-detail-view'),
+    path('register/', authViews.register, name='register-view'),
+    path('login/', authViews.user_login, name='login-view'),
+    path('logout/', authViews.user_logout, name='logout-view'),
 ]

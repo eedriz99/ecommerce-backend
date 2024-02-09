@@ -76,7 +76,7 @@ def order_view(request, slug):
     elif request.method == 'DELETE':
         order = get_object_or_404(Order, id=slug)
         order.delete()
-        return HttpResponseRedirect(reverse('order-list-view'))
+        return HttpResponseRedirect(reverse('orders_view'))
     else:
         return Response({'message': 'Unsupported HTTP method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 

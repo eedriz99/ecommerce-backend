@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-@u!9l5)cww-dd(g999^q^d=6u4bi6jrh&&=1bc5@*s1jzw=d&l'
+SECRET_KEY = 'django-insecure-@u!9l5)cww-dd(g999^q^d=6u4bi6jrh&&=1bc5@*s1jzw=d&lll3bcd3ajknafklnsafn'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -103,6 +103,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+PASSWORD_HASHERS = [
+    "django.contrib.auth.hashers.Argon2PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
+    "django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
+]
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
@@ -131,6 +138,9 @@ AUTH_USER_MODEL = "userProfile.CustomUser"
 # Rest framework settings
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+    ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20
 }
