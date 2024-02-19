@@ -41,7 +41,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         null=True, blank=True)
     country = models.CharField(
         max_length=10, default="USA", null=True, blank=True)
-    picture = models.ImageField(upload_to="", null=True, blank=True)
+    picture = models.ImageField(upload_to="profilePictures/", null=True, blank=True)
 
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)

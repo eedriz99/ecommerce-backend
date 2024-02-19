@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import response
+from utils.utils import login_required_for_non_get
 from .serializer import CategorySerializer, ProductSerializer
 from .models import Product, Category
 from rest_framework.decorators import api_view
@@ -9,21 +10,13 @@ from rest_framework import status
 # Create your views here.
 
 
-@api_view(['GET', 'POST', 'PUT', 'DELETE'])
+@api_view(['GET', 'PUT', 'DELETE'])
+@login_required_for_non_get
 def product_view(request, slug):
     if request.method == 'GET':
         querySet = Product.objects.get(productID=int(slug))
         serializer = ProductSerializer(querySet)
         return Response(serializer.data)
-
-    elif request.method == 'POST':
-        serializer = ProductSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED
-                            )
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'PUT':
         # get the object using its id and data given by client
@@ -36,12 +29,25 @@ def product_view(request, slug):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
+@login_required_for_non_get
 def products_view(request):
     if request.method == 'GET':
         querySet = Product.objects.all().order_by('productID')
         serializer = ProductSerializer(querySet, many=True)
         return Response(serializer.data)
+    elif request.method == 'POST':
+        category = Category.objects.get_or_create(
+            title=request.data['category'])
+        # assign the created/retrieved category to the product
+        request.data['category'] = category[0]
+        serializer = ProductSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED
+                            )
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 

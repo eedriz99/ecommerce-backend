@@ -1,13 +1,14 @@
 from django.db import models
-from django.conf import settings
+from django.contrib.auth import get_user_model
 import uuid
 
 from product.models import Product
 # from userProfile.models import userProfile
+User = get_user_model()
 
 # Create your models here.
 
-STATUS_CHOICES = {
+ORDER_STATUS_CHOICES = {
     "SUB": "Submitted",
     "INP": "In Progress",
     "PRO": "Processed",
@@ -22,10 +23,10 @@ class Order(models.Model):
         auto_now_add=True)  # Date of order creation
     # User who is initiating the order
     buyer = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+        User, on_delete=models.SET_NULL, null=True)
     # status of the order, if it is processed, etc.
     status = models.CharField(
-        max_length=3, choices=STATUS_CHOICES, default="SUB", blank=True)
+        max_length=3, choices=ORDER_STATUS_CHOICES, default="SUB", blank=True)
     total = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
 
     def __str__(self):

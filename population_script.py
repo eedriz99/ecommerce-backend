@@ -24,7 +24,7 @@ while currentPage <= maxPage:
 
         for article in articles:
             productList.append({'id': len(productList) + 1,
-                                'name': article.css.select(".prd > a")[0]['data-name'],
+                                'name': article.css.select(".name")[0],
                                 'image': article.css.select(".img")[0]['data-src'],
                                 'brand': article.css.select(".prd > a")[0]['data-brand'],
                                 'category': article.css.select(".prd > a")[0]['data-category'].split("/")[0],

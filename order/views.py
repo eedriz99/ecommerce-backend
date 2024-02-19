@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from django.db import transaction
+from django.contrib.auth.decorators import login_required
 
 # Serializer imports
 from .serializer import OrderItemSerializer, OrderSerializer, ReviewSerializer, OrderRequestSerializer
@@ -8,7 +9,7 @@ from .serializer import OrderItemSerializer, OrderSerializer, ReviewSerializer, 
 # Model imports
 from .models import Order, OrderItem, Review
 from product.models import Product
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 # Rest framework imports
 from rest_framework.decorators import api_view
@@ -17,16 +18,19 @@ from rest_framework.reverse import reverse
 from rest_framework import status
 
 
+User = get_user_model()
+
 # Create your views here.
 
 
 @api_view(['GET', 'POST'])
+@login_required(login_url='/login/')
 def orders_view(request):
     if request.method == "GET":
         querySet = Order.objects.filter(
             buyer=request.user).order_by('timestamp')
         serializer = OrderSerializer(querySet, many=True)
-        return Response(serializer.data)
+        return Response({"Orders": f"{serializer.data}"}, status=status.HTTP_200_OK)
 
     elif request.method == 'POST':
         serializer = OrderRequestSerializer(data=request.data)
@@ -37,7 +41,7 @@ def orders_view(request):
                     total = serializer.validated_data['total']
                     cartItems = serializer.validated_data['cartItems']
                     # Get curret User object using the user attribute returned from the request object.
-                    current_user = User.objects.get(username=request.user)
+                    current_user = User.objects.get(email=request.user)
                     # Create an Order object with buyer being the current user and a total from the data from the frontend.
                     order = Order.objects.create(
                         buyer=current_user, total=total)
@@ -45,7 +49,7 @@ def orders_view(request):
                         productID=item['productID']), quantity=item['quantity']) for item in cartItems]
 
                     OrderItem.objects.bulk_create(order_items)
-                    return Response({'message': f'Order of {len(order_items)} items created successfully'},
+                    return Response({'message': f'Order of {len(order_items)} items created successfully', 'orderID': f"{order}"},
                                     status=status.HTTP_201_CREATED)
             except Exception as e:
                 return Response({"error": str(e)}, status=status.HTTP_409_CONFLICT)
@@ -53,6 +57,7 @@ def orders_view(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
+@login_required(login_url='/login/')
 def order_view(request, slug):
 
     if request.method == 'GET':
