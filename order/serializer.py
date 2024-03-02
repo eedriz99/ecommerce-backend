@@ -6,7 +6,7 @@ class OrderSerializer(serializers.ModelSerializer):
     buyer = serializers.SlugRelatedField(
         many=False,
         read_only=True,
-        slug_field='username'
+        slug_field='email'
     )
 
     class Meta:

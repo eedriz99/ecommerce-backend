@@ -41,7 +41,8 @@ def orders_view(request):
                     total = serializer.validated_data['total']
                     cartItems = serializer.validated_data['cartItems']
                     # Get curret User object using the user attribute returned from the request object.
-                    current_user = User.objects.get(email=request.user)
+                    current_user = User.objects.get(
+                        email=request.user)
                     # Create an Order object with buyer being the current user and a total from the data from the frontend.
                     order = Order.objects.create(
                         buyer=current_user, total=total)
@@ -59,7 +60,6 @@ def orders_view(request):
 @api_view(['GET', 'PUT', 'DELETE'])
 @login_required(login_url='/login/')
 def order_view(request, slug):
-
     if request.method == 'GET':
         querySet = Order.objects.get(
             id=slug, buyer=request.user)
@@ -67,7 +67,6 @@ def order_view(request, slug):
         # Get items in the order
         items = OrderItem.objects.filter(order=querySet)
         orderItem_serializer = OrderItemSerializer(items, many=True)
-
         return Response({'order': serializer.data, 'order Items': orderItem_serializer.data})
     elif request.method == 'PUT':
         order = Order.objects.get(id=slug)
@@ -83,7 +82,8 @@ def order_view(request, slug):
         order.delete()
         return HttpResponseRedirect(reverse('orders_view'))
     else:
-        return Response({'message': 'Unsupported HTTP method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response({'message': 'Unsupported HTTP method'},
+                        status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 '''

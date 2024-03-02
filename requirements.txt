@@ -6,4 +6,8 @@ django[bcrypt]
 django[argon2]
 Pillow
 djangorestframework-simplejwt
-
+whitenoise[brotli]
+psycopg2-binary
+dj-database-url
+gunicorn
+uvicorn

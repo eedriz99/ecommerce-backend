@@ -10,11 +10,11 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    category = serializers.SlugRelatedField(
-        many=True,
-        read_only=True,
-        slug_field='title'
-    )
+    # category = serializers.SlugRelatedField(
+    #     # many=True,
+    #     read_only=True,
+    #     slug_field='title'
+    # )
 
     class Meta:
         model = Product

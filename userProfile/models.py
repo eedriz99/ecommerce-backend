@@ -41,7 +41,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         null=True, blank=True)
     country = models.CharField(
         max_length=10, default="USA", null=True, blank=True)
-    picture = models.ImageField(upload_to="profilePictures/", null=True, blank=True)
+    picture = models.ImageField(
+        upload_to="profilePictures/", null=True, blank=True)
 
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
@@ -57,6 +58,13 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def is_staff(self):
         return self.is_admin
 
+    # @property
+    # def get_email(self):
+    #     try:
+    #         return self.email
+    #     except AttributeError:
+    #         return "The object has no  attribute `email`."
+
     def get_full_name(self):
         return f"{self.firstname} {self.lastname}"
 
@@ -70,4 +78,4 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return True
 
     def __str__(self):
-        return f"{self.firstname} {self.lastname}"
+        return self.email
